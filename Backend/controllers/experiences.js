@@ -12,3 +12,17 @@ exports.getAllExperiences = (req, res, next) => {
       });
     });
 };
+
+exports.getRandomExperience = (req, res, next) => {
+  Experience.findOne({
+    companyName: req.query.companyName,
+  })
+    .then((experience) => {
+      res.status(200).json(experience);
+    })
+    .catch((error) => {
+      res.status(404).json({
+        error: error,
+      });
+    });
+};
