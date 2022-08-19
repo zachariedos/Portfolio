@@ -24,7 +24,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger.js";
 
 export default {
-  name: "HelloWorld",
+  name: "Expériences",
   props: {
     msg: String,
   },
@@ -32,17 +32,28 @@ export default {
     return {
       experiences: "",
       experiencesnb: "",
+      espacement: 250, // ne pas toucher
+      stepgeneratestyle: "",
     };
   },
   methods: {
     async showExperiences() {
-      console.log("async showExperiences: ");
       axios
         .get("http://localhost:3000/")
         .then((resp) => {
           if (resp.data) {
             this.experiences = resp.data;
             this.experiencesnb = Object.keys(this.experiences).length;
+            var style = document.createElement("style");
+            style.type = "text/css";
+            for (var i = 0; i < this.experiencesnb; i++) {
+              this.stepgeneratestyle += `.step:nth-child(${i + 1}) { top: ${
+                (i + 1) * (this.espacement * 2)
+              }px} `;
+            }
+
+            style.innerHTML = this.stepgeneratestyle;
+            document.getElementsByTagName("head")[0].appendChild(style);
             setTimeout(() => {
               this.showmustGoOn();
             }, 0.001);
@@ -54,14 +65,15 @@ export default {
       const content = document.querySelector("#content");
       console.log(this.experiencesnb);
       const nbexperiences = this.experiencesnb;
+      const espacement = this.espacement;
       gsap.registerPlugin(ScrollTrigger);
 
       const noise2D = createNoise2D();
 
       // Create circles, step circles and lines
-      for (let i = 0; i < (nbexperiences + 1) * 250; i++) {
+      for (let i = 0; i < (nbexperiences + 1) * espacement; i++) {
         // Define it's a step every 250 circles (500px)
-        const step = i % 250 === 0 && i !== 0;
+        const step = i % espacement === 0 && i !== 0;
         const div = document.createElement("div");
 
         if (step) {
@@ -221,10 +233,6 @@ h3 {
   opacity: 0.65;
   font-weight: 500;
 }
-body {
-  background: rgb(35, 39, 46);
-  color: white;
-}
 
 .profile {
   clip-path: circle(40%);
@@ -277,46 +285,10 @@ body {
   text-align: left;
 }
 
-.step:nth-child(1) {
-  top: 500px;
-}
-.step:nth-child(2) {
-  top: 1000px;
-}
-.step:nth-child(3) {
-  top: 1500px;
-}
-.step:nth-child(4) {
-  top: 2000px;
-}
-.step:nth-child(5) {
-  top: 2500px;
-}
-
 #title {
   height: 50vh;
-  display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-}
-
-.scroll {
-  text-transform: uppercase;
-  font-weight: 500;
-  margin-top: 50px;
-  letter-spacing: 2px;
-  position: relative;
-}
-
-.scroll:after {
-  content: "";
-  position: absolute;
-  width: 2px;
-  height: 50px;
-  background: white;
-  border-radius: 4px;
-  left: 50%;
-  top: calc(100% + 10px);
 }
 </style>

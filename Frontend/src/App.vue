@@ -1,7 +1,7 @@
 <template>
   <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link> |
+    <router-link to="/">Expérience</router-link> |
+    <router-link to="/admin">Administration</router-link>
   </nav>
   <router-view />
 </template>
@@ -14,6 +14,10 @@
   text-align: center;
   color: #2c3e50;
 }
+body {
+  background: rgb(35, 39, 46);
+  color: white;
+}
 
 nav {
   padding: 30px;
@@ -21,10 +25,28 @@ nav {
 
 nav a {
   font-weight: bold;
-  color: #2c3e50;
+  color: #ffffff;
 }
 
 nav a.router-link-exact-active {
   color: #42b983;
+}
+.scroll {
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-top: 50px;
+  letter-spacing: 2px;
+  position: relative;
+}
+
+.scroll:after {
+  content: "";
+  position: absolute;
+  width: 2px;
+  height: 50px;
+  background: white;
+  border-radius: 4px;
+  left: 50%;
+  top: calc(100% + 10px);
 }
 </style>
