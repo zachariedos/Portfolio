@@ -32,6 +32,7 @@ export default {
 </script>
 <style scooped>
 .sidebar {
+  min-height: 100vh;
   width: 150px;
   position: absolute;
   left: 0;
