@@ -6,6 +6,7 @@
         v-for="(experience, index) in experiences"
         class="card"
         v-bind:id="`experience${index}`"
+        v-bind:companyName="`${experience.companyName}`"
       >
         <div class="container">
           {{ experience.companyName }}<br />
@@ -45,13 +46,26 @@ export default {
         .then((resp) => {
           if (resp.data) {
             this.experiences = resp.data;
-            console.log(this.experiences);
           }
-          console.log("ok");
         })
         .catch(() => {
           console.log("erreur serveur");
         });
+    },
+    async updateExperiencesIndex() {
+      await this.experiences.forEach((experience) => {
+        experience.newIndex = document
+          .querySelector(`[companyname="${experience.companyName}"]`)
+          .id.replace("experience", "");
+        console.log(experience);
+        axios
+          .put("http://localhost:3000/modifyExperienceIndex", experience, {
+            // Config
+          })
+          .then((resp) => {
+            console.log(resp);
+          });
+      });
     },
     goUp(event) {
       this.clickedExperience = event.target.parentNode.parentNode.id.replace(
@@ -70,6 +84,7 @@ export default {
         currentelem.id = transfereid[1];
         beforeelem.id = transfereid[0];
       }
+      this.updateExperiencesIndex();
     },
     goDown(event) {
       this.clickedExperience = event.target.parentNode.parentNode.id.replace(
@@ -88,6 +103,7 @@ export default {
         currentelem.id = transfereid[1];
         afterelem.id = transfereid[0];
       }
+      this.updateExperiencesIndex();
     },
   },
   mounted() {
@@ -115,6 +131,7 @@ div.bodypage {
   /* Add shadows to create the "card" effect */
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   transition: 0.3s;
+  min-width: 200px;
 }
 
 /* On mouse-over, add a deeper shadow */

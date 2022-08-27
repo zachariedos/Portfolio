@@ -28,14 +28,10 @@ export default {
       currentPage: "Experiences",
     };
   },
-  mounted() {
-    M.AutoInit();
-  },
 };
 </script>
 <style scooped>
 .sidebar {
-  height: 100vh;
   width: 150px;
   position: absolute;
   left: 0;
