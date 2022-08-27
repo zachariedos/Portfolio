@@ -9,9 +9,10 @@
   "dependencies": {
     "axios": "^0.27.2",
     "core-js": "^3.8.3",
+    "got": "^12.3.1",
     "gsap": "^3.10.4",
-    "materialize-css": "^1.0.0-rc.2",
     "simplex-noise": "^4.0.0",
+    "vue": "^3.2.37",
     "vue-router": "^4.0.3",
     "vuex": "^4.0.0"
   },

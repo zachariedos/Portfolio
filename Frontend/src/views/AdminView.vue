@@ -16,7 +16,6 @@
 <script>
 import Experiences from "@/components/Admin/experiences.vue";
 import Portfolio from "@/components/Admin/portfolio.vue";
-import M from "materialize-css";
 
 export default {
   name: "AdminView",

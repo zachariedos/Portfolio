@@ -5,8 +5,9 @@ const connectmongoose = require("./privacy/mongoose_connection");
 const experiencesRoutes = require("./routes/experiences");
 
 //MongoDB
-const mongodbPassword = connectmongoose.password;
+
 const mongodbUsername = connectmongoose.username;
+const mongodbPassword = connectmongoose.password;
 mongoose
   .connect(
     `mongodb+srv://${mongodbUsername}:${mongodbPassword}@cluster0.vqxfw6s.mongodb.net/?retryWrites=true&w=majority`,
