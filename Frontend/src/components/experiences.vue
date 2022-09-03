@@ -1,4 +1,8 @@
 <template>
+  <div class="autoScroll" @click="(scrollplay = !scrollplay), autoScroll()">
+    <img v-if="!scrollplay" src="../img/play.png" alt="play" />
+    <img v-else src="../img/pause.png" alt="play" />
+  </div>
   <h1></h1>
   <div id="title">
     <img src="../img/profile.jpg" alt="Profile picture" class="profile" />
@@ -34,6 +38,9 @@ export default {
       experiencesnb: "",
       espacement: 250, // ne pas toucher
       stepgeneratestyle: "",
+      scrollplay: false,
+      counter: 0,
+      timerOn: 0,
     };
   },
   methods: {
@@ -61,17 +68,27 @@ export default {
         })
         .catch(() => console.log("erreur serveur"));
     },
+
+    autoScroll() {
+      if (this.scrollplay) {
+        window.scrollBy(0, 2);
+        setTimeout(() => {
+          this.autoScroll();
+        }, 0.1);
+      }
+    },
     showmustGoOn() {
       const content = document.querySelector("#content");
       console.log(this.experiencesnb);
       const nbexperiences = this.experiencesnb;
       const espacement = this.espacement;
+
       gsap.registerPlugin(ScrollTrigger);
 
       const noise2D = createNoise2D();
 
       // Create circles, step circles and lines
-      for (let i = 0; i < (nbexperiences + 1) * espacement; i++) {
+      for (let i = 0; i < nbexperiences * espacement + espacement; i++) {
         // Define it's a step every 250 circles (500px)
         const step = i % espacement === 0 && i !== 0;
         const div = document.createElement("div");
@@ -259,7 +276,7 @@ h3 {
 .step-circle {
   width: 15px;
   height: 15px;
-  border-radius: 50%;
+  border-radius: 25%;
   margin: -13px 0 0 50px;
 }
 
@@ -290,5 +307,22 @@ h3 {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+}
+
+.autoScroll {
+  background-color: white;
+  position: -webkit-fixed;
+  position: fixed;
+  width: 50px;
+  height: 50px;
+  bottom: 30px;
+  right: 30px;
+  border-radius: 10px;
+  z-index: 9999;
+  display: flex;
+}
+.autoScroll img {
+  width: 30px;
+  margin: auto;
 }
 </style>
