@@ -11,7 +11,8 @@
         <div class="container">
           {{ experience.companyName }}<br />
           {{ experience.description }}<br />
-          {{ experience.fromto }}<br />
+          {{ JSON.parse(experience.fromto).start }} -
+          {{ JSON.parse(experience.fromto).end }} <br />
         </div>
         <div class="btn">
           <img class="moove" @click="goUp($event)" src="../../img/top.png" />
@@ -21,6 +22,46 @@
             src="../../img/bottom.png"
           />
         </div>
+        <p @click="deleteExperiences()" class="deleteButton">X</p>
+      </div>
+    </div>
+    <div class="AddXp">
+      <p>Ajout d'experience</p>
+
+      <div class="AddXpDateXTexte">
+        <button
+          id="todayBtn"
+          v-bind:color="todaybtn"
+          @click="todaybtn = !todaybtn"
+        >
+          Jusqu'a aujourd'hui
+        </button>
+        <DatePicker
+          id="AddXpDate"
+          v-model="picked"
+          is-dark
+          is-range
+          :value="null"
+          color="red"
+        />
+        <textarea
+          v-model="addXpDescValue"
+          id="AddXpDesc"
+          class="InputAdd"
+          placeholder="Description de l'experience"
+          cols="30"
+          rows="10"
+        ></textarea>
+      </div>
+      <div class="AddXpInput">
+        <input
+          v-model="addXpTitleValue"
+          id="AddXpTitle"
+          class="InputAdd"
+          type="text"
+          placeholder="Titre de l'experience"
+        />
+        <p class="plusxp" @click="addExperience()">+</p>
       </div>
     </div>
   </div>
@@ -28,6 +69,9 @@
 <style scooped></style>
 <script>
 import axios from "axios";
+import { format } from "date-fns";
+import { fr } from "date-fns/esm/locale";
+
 export default {
   name: "Experiences",
   props: {
@@ -37,6 +81,11 @@ export default {
     return {
       experiences: "",
       clickedExperience: "",
+      picked: "",
+      dateLocales: { fr: fr },
+      todaybtn: false,
+      addXpTitleValue: "",
+      addXpDescValue: "",
     };
   },
   methods: {
@@ -46,6 +95,24 @@ export default {
         .then((resp) => {
           if (resp.data) {
             this.experiences = resp.data;
+            this.experiences.forEach((experience) => {
+              let newstart = format(
+                new Date(JSON.parse(experience.fromto).start),
+                "dd MMMM yyyy",
+                { locale: fr }
+              );
+              let newend =
+                JSON.parse(experience.fromto).end != "today"
+                  ? format(
+                      new Date(JSON.parse(experience.fromto).end),
+                      "dd MMMM yyyy",
+                      { locale: fr }
+                    )
+                  : "Jusqu'a aujourd'hui";
+              experience.fromto = `{"start": "${newstart}", "end": "${newend}"}`;
+
+              console.log(JSON.parse(experience.fromto).end);
+            });
           }
         })
         .catch(() => {
@@ -57,7 +124,6 @@ export default {
         experience.newIndex = document
           .querySelector(`[companyname="${experience.companyName}"]`)
           .id.replace("experience", "");
-        console.log(experience);
         axios
           .put("http://localhost:3000/modifyExperienceIndex", experience, {
             // Config
@@ -66,6 +132,28 @@ export default {
             console.log(resp);
           });
       });
+    },
+    async deleteExperiences() {
+      await this.experiences.forEach((experience) => {
+        if (
+          experience.companyName ==
+          event.target.parentNode.getAttribute("companyname")
+        ) {
+          let id = experience._id;
+          axios
+            .post("http://localhost:3000/deleteExperience", experience, {})
+            .then((resp) => {
+              document.getElementById(`experience${id}`).remove();
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+      });
+      // function test() {
+      //   console.log(event.target.parentNode);
+      //   document.getElementById().remove();
+      // }
     },
     goUp(event) {
       this.clickedExperience = event.target.parentNode.parentNode.id.replace(
@@ -105,7 +193,27 @@ export default {
       }
       this.updateExperiencesIndex();
     },
+    addExperience() {
+      let experience = "";
+      const experienceTitle = this.addXpTitleValue;
+      const experienceDate = this.picked;
+      const experienceDesc = this.addXpDescValue;
+      this.todaybtn && experienceDate ? (experienceDate.end = "today") : "";
+
+      experience = JSON.stringify({
+        companyName: experienceTitle,
+        description: experienceDesc,
+        fromto: experienceDate,
+      });
+
+      axios
+        .post("http://localhost:3000/addExperience", JSON.parse(experience), {})
+        .then((resp) => {
+          console.log(resp);
+        });
+    },
   },
+  components: {},
   mounted() {
     this.showExperiences();
   },
@@ -146,5 +254,64 @@ div.bodypage {
 }
 .experiences {
   justify-content: center;
+}
+.deleteButton {
+  color: red;
+  font-size: 20;
+  font-weight: bold;
+}
+
+.deleteButton:hover {
+  cursor: pointer;
+}
+
+.InputAdd {
+  background-color: #ffffff1c;
+  border-radius: 5px;
+  border: 2px solid white;
+  font-size: 18px;
+  color: white;
+  margin: 10px;
+}
+
+.plusxp {
+  color: rgb(0, 181, 0);
+  font-size: 30px;
+  margin-left: 10px;
+}
+
+.AddXp {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.AddXpDateXTexte {
+  flex-direction: row;
+  display: flex;
+}
+.AddXpInput {
+  flex-direction: row;
+  display: flex;
+}
+
+.plusxp:hover {
+  cursor: pointer;
+}
+
+#todayBtn {
+  border: none;
+  height: 50px;
+  width: 200px;
+  border-radius: 2px;
+  margin: 5px;
+}
+#todayBtn[color="false"] {
+  background-color: #b84545;
+}
+
+#todayBtn[color="true"] {
+  background-color: #5cae5c;
 }
 </style>

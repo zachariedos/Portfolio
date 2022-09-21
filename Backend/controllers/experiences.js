@@ -15,7 +15,6 @@ exports.getAllExperiences = (req, res, next) => {
 };
 
 exports.getRandomExperience = (req, res, next) => {
-  console.log(req.params);
   Experience.findOne({
     companyName: req.query.companyName,
   })
@@ -42,4 +41,31 @@ exports.modifyExperienceIndex = (req, res, next) => {
       }
     }
   );
+};
+
+exports.deleteExperience = (req, res, next) => {
+  Experience.findOne({ _id: req.body._id })
+    .then(() => {
+      Experience.deleteOne({ _id: req.body._id })
+        .then(() => res.status(200).json({ message: "Experience supprimé" }))
+        .catch((error) => res.status(400).json({ error: error }));
+    })
+    .catch((error) => res.status(400).json({ error }));
+};
+
+exports.addExperience = (req, res, next) => {
+  console.log(req.body);
+  const newXP = new Experience({
+    companyName: req.body.companyName,
+    description: req.body.description,
+    fromto: JSON.stringify(req.body.fromto),
+  });
+  newXP
+    .save()
+    .then(() => {
+      res.status(201).json({ message: "Experience Ajouté !" });
+    })
+    .catch((error) => {
+      res.status(400).json({ error });
+    });
 };

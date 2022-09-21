@@ -13,7 +13,11 @@
   <div id="content">
     <div v-for="experience in experiences" class="step">
       <h2>{{ experience.companyName }}</h2>
-      <h3>{{ experience.fromto }}</h3>
+      <h3>
+        {{ JSON.parse(experience.fromto).start }}
+        -
+        {{ JSON.parse(experience.fromto).end }}
+      </h3>
       <p>
         {{ experience.description }}
       </p>
@@ -25,6 +29,8 @@
 import axios from "axios";
 import { createNoise2D } from "simplex-noise";
 import { gsap } from "gsap";
+import { format } from "date-fns";
+import { fr } from "date-fns/esm/locale";
 import { ScrollTrigger } from "gsap/ScrollTrigger.js";
 
 export default {
@@ -36,6 +42,7 @@ export default {
     return {
       experiences: "",
       experiencesnb: "",
+      dateLocales: { fr: fr },
       espacement: 250, // ne pas toucher
       stepgeneratestyle: "",
       scrollplay: false,
@@ -50,6 +57,26 @@ export default {
         .then((resp) => {
           if (resp.data) {
             this.experiences = resp.data;
+            console.log(this.experiences);
+            this.experiences.forEach((experience) => {
+              let newstart = format(
+                new Date(JSON.parse(experience.fromto).start),
+                "dd MMMM yyyy",
+                { locale: fr }
+              );
+              let newend =
+                JSON.parse(experience.fromto).end != "today"
+                  ? format(
+                      new Date(JSON.parse(experience.fromto).end),
+                      "dd MMMM yyyy",
+                      { locale: fr }
+                    )
+                  : "Jusqu'a aujourd'hui";
+              experience.fromto = `{"start": "${newstart}", "end": "${newend}"}`;
+
+              console.log(JSON.parse(experience.fromto).end);
+            });
+
             this.experiencesnb = Object.keys(this.experiences).length;
             var style = document.createElement("style");
             style.type = "text/css";
@@ -219,14 +246,12 @@ export default {
 * {
   margin: 0;
   padding: 0;
-  color: rgba(255, 255, 255, 0.633);
 }
 body {
   position: relative;
 }
 
 p {
-  font-size: 14px;
   margin: 10px 0;
 }
 
@@ -320,6 +345,9 @@ h3 {
   border-radius: 10px;
   z-index: 9999;
   display: flex;
+}
+.autoScroll:hover {
+  cursor: pointer;
 }
 .autoScroll img {
   width: 30px;

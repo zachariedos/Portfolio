@@ -38,7 +38,8 @@ export default {
   left: 0;
   top: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.334);
+  background-color: rgb(22 25 30);
+  z-index: 99999;
   box-shadow: 5px 0px 15px 5px rgba(0, 0, 0, 0.25);
 }
 
