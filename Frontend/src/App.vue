@@ -1,7 +1,8 @@
 <template>
   <nav>
     <router-link to="/">Expérience</router-link> |
-    <router-link to="/admin">Administration</router-link>
+    <router-link to="/portfolio">Portfolio</router-link>
+    <p class="hide"><router-link to="/admin">Administration</router-link></p>
   </nav>
   <router-view />
 </template>
@@ -13,6 +14,9 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: rgba(255, 255, 255, 0.633);
+}
+.hide {
+  display: none;
 }
 body {
   background: rgb(35, 39, 46);

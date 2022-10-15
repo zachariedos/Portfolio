@@ -34,7 +34,7 @@
           v-bind:color="todaybtn"
           @click="todaybtn = !todaybtn"
         >
-          Jusqu'a aujourd'hui
+          Jusqu'à aujourd'hui
         </button>
         <DatePicker
           id="AddXpDate"
@@ -108,7 +108,7 @@ export default {
                       "dd MMMM yyyy",
                       { locale: fr }
                     )
-                  : "Jusqu'a aujourd'hui";
+                  : "Jusqu'à aujourd'hui";
               experience.fromto = `{"start": "${newstart}", "end": "${newend}"}`;
 
               console.log(JSON.parse(experience.fromto).end);
@@ -139,11 +139,10 @@ export default {
           experience.companyName ==
           event.target.parentNode.getAttribute("companyname")
         ) {
-          let id = experience._id;
           axios
             .post("http://localhost:3000/deleteExperience", experience, {})
             .then((resp) => {
-              document.getElementById(`experience${id}`).remove();
+              this.showExperiences();
             })
             .catch((error) => {
               console.log(error);
@@ -209,7 +208,7 @@ export default {
       axios
         .post("http://localhost:3000/addExperience", JSON.parse(experience), {})
         .then((resp) => {
-          console.log(resp);
+          this.showExperiences();
         });
     },
   },

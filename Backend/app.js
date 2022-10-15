@@ -3,6 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const connectmongoose = require("./privacy/mongoose_connection");
 const experiencesRoutes = require("./routes/experiences");
+const sitesRoutes = require("./routes/sites");
 
 //MongoDB
 
@@ -34,5 +35,6 @@ app.use((req, res, next) => {
 app.use(express.json());
 
 app.use("/", experiencesRoutes);
+app.use("/portfolio", sitesRoutes);
 
 module.exports = app;

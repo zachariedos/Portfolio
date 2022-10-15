@@ -3,23 +3,18 @@
     <img v-if="!scrollplay" src="../img/play.png" alt="play" />
     <img v-else src="../img/pause.png" alt="play" />
   </div>
-  <h1></h1>
   <div id="title">
     <img src="../img/profile.jpg" alt="Profile picture" class="profile" />
-    <h1>Expérience</h1>
-    <h1 class="colored">professionnelle</h1>
+    <h1 class="colored">Portfolio</h1>
     <div class="scroll">scroll</div>
   </div>
   <div id="content">
-    <div v-for="experience in experiences" class="step">
-      <h2>{{ experience.companyName }}</h2>
-      <h3>
-        {{ JSON.parse(experience.fromto).start }}
-        -
-        {{ JSON.parse(experience.fromto).end }}
-      </h3>
+    <div v-for="site in sites" class="step">
+      <h2>
+        <a v-bind:href="site.link" target="_blank">{{ site.siteName }}</a>
+      </h2>
       <p>
-        {{ experience.description }}
+        {{ site.description }}
       </p>
     </div>
   </div>
@@ -29,20 +24,17 @@
 import axios from "axios";
 import { createNoise2D } from "simplex-noise";
 import { gsap } from "gsap";
-import { format } from "date-fns";
-import { fr } from "date-fns/esm/locale";
 import { ScrollTrigger } from "gsap/ScrollTrigger.js";
 
 export default {
-  name: "Expériences",
+  name: "Portfolio",
   props: {
     msg: String,
   },
   data() {
     return {
-      experiences: "",
-      experiencesnb: "",
-      dateLocales: { fr: fr },
+      sites: "",
+      sitesnb: "",
       espacement: 250, // ne pas toucher
       stepgeneratestyle: "",
       scrollplay: false,
@@ -51,36 +43,18 @@ export default {
     };
   },
   methods: {
-    async showExperiences() {
+    async showSites() {
       axios
-        .get("http://localhost:3000/")
+        .get("http://localhost:3000/portfolio")
         .then((resp) => {
           if (resp.data) {
-            this.experiences = resp.data;
-            console.log(this.experiences);
-            this.experiences.forEach((experience) => {
-              let newstart = format(
-                new Date(JSON.parse(experience.fromto).start),
-                "dd MMMM yyyy",
-                { locale: fr }
-              );
-              let newend =
-                JSON.parse(experience.fromto).end != "today"
-                  ? format(
-                      new Date(JSON.parse(experience.fromto).end),
-                      "dd MMMM yyyy",
-                      { locale: fr }
-                    )
-                  : "Jusqu'à aujourd'hui";
-              experience.fromto = `{"start": "${newstart}", "end": "${newend}"}`;
+            this.sites = resp.data;
+            console.log(this.sites);
 
-              console.log(JSON.parse(experience.fromto).end);
-            });
-
-            this.experiencesnb = Object.keys(this.experiences).length;
+            this.sitesnb = Object.keys(this.sites).length;
             var style = document.createElement("style");
             style.type = "text/css";
-            for (var i = 0; i < this.experiencesnb; i++) {
+            for (var i = 0; i < this.sitesnb; i++) {
               this.stepgeneratestyle += `.step:nth-child(${i + 1}) { top: ${
                 (i + 1) * (this.espacement * 2)
               }px} `;
@@ -106,8 +80,8 @@ export default {
     },
     showmustGoOn() {
       const content = document.querySelector("#content");
-      console.log(this.experiencesnb);
-      const nbexperiences = this.experiencesnb;
+      console.log(this.sitesnb);
+      const nbsites = this.sitesnb;
       const espacement = this.espacement;
 
       gsap.registerPlugin(ScrollTrigger);
@@ -115,7 +89,7 @@ export default {
       const noise2D = createNoise2D();
 
       // Create circles, step circles and lines
-      for (let i = 0; i < nbexperiences * espacement + espacement; i++) {
+      for (let i = 0; i < nbsites * espacement + espacement; i++) {
         // Define it's a step every 250 circles (500px)
         const step = i % espacement === 0 && i !== 0;
         const div = document.createElement("div");
@@ -216,7 +190,7 @@ export default {
     },
   },
   mounted() {
-    this.showExperiences();
+    this.showSites();
   },
 };
 
@@ -269,6 +243,9 @@ h1 {
 
 h2 {
   letter-spacing: -1px;
+}
+h2 a {
+  color: unset;
 }
 
 h3 {
