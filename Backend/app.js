@@ -4,9 +4,9 @@ const mongoose = require("mongoose");
 const connectmongoose = require("./privacy/mongoose_connection");
 const experiencesRoutes = require("./routes/experiences");
 const sitesRoutes = require("./routes/sites");
+const auth = require("./routes/user");
 
 //MongoDB
-
 const mongodbUsername = connectmongoose.username;
 const mongodbPassword = connectmongoose.password;
 mongoose
@@ -36,5 +36,6 @@ app.use(express.json());
 
 app.use("/", experiencesRoutes);
 app.use("/portfolio", sitesRoutes);
+app.use("/auth", auth);
 
 module.exports = app;
