@@ -1,21 +1,24 @@
 <template>
-  <div class="sidebar">
-    <div class="sidebarcontent">
-      <div>
-        <a @click="currentPage = 'Experiences'" href="#">Experiences</a>
+  <div v-if="this.check">
+    <div class="sidebar">
+      <div class="sidebarcontent">
+        <div>
+          <a @click="currentPage = 'Experiences'" href="#">Experiences</a>
+        </div>
+        <div><a @click="currentPage = 'Portfolio'" href="#">Portfolio</a></div>
       </div>
-      <div><a @click="currentPage = 'Portfolio'" href="#">Portfolio</a></div>
     </div>
-  </div>
 
-  <div class="body-text">
-    <Experiences v-if="currentPage == 'Experiences'"></Experiences>
-    <Portfolio v-if="currentPage == 'Portfolio'"></Portfolio>
+    <div class="body-text">
+      <Experiences v-if="currentPage == 'Experiences'"></Experiences>
+      <Portfolio v-if="currentPage == 'Portfolio'"></Portfolio>
+    </div>
   </div>
 </template>
 <script>
 import Experiences from "@/components/Admin/experiences.vue";
 import Portfolio from "@/components/Admin/portfolio.vue";
+import axios from "axios";
 
 export default {
   name: "AdminView",
@@ -26,7 +29,11 @@ export default {
   data: function () {
     return {
       currentPage: "Experiences",
+      check: axios.defaults.headers.common["Authorization"],
     };
+  },
+  beforeCreate() {
+    this.check ? "" : this.$router.push("/connexion");
   },
 };
 </script>

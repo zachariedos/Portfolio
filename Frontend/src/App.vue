@@ -1,11 +1,29 @@
 <template>
-  <nav>
+  <nav @eventname="updateparent()">
+    <p>{{ this.navKey }}</p>
     <router-link to="/">Expérience</router-link> |
-    <router-link to="/portfolio">Portfolio</router-link>
-    <p class="hide"><router-link to="/admin">Administration</router-link></p>
+    <router-link to="/portfolio">Portfolio</router-link> |
+    <router-link v-if="this.toCheck" to="/admin">Administration</router-link> |
+    <router-link v-if="!this.toCheck" to="/connexion">Connexion</router-link>
   </nav>
+  <button @click="console.log(this.$route.params)">dad</button>
   <router-view />
 </template>
+<script>
+export default {
+  name: "App",
+  data() {
+    return {
+      navKey: 0,
+    };
+  },
+  methods: {
+    updateparent() {
+      console.log("ça marche putain");
+    },
+  },
+};
+</script>
 
 <style>
 #app {
@@ -14,9 +32,6 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: rgba(255, 255, 255, 0.633);
-}
-.hide {
-  display: none;
 }
 body {
   background: rgb(35, 39, 46);

@@ -17,6 +17,11 @@ const routes = [
     name: "admin",
     component: () => import("../views/AdminView.vue"),
   },
+  {
+    path: "/connexion",
+    name: "connexion",
+    component: () => import("../views/Connexion.vue"),
+  },
 ];
 
 const router = createRouter({

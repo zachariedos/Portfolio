@@ -217,6 +217,7 @@ export default {
   },
   mounted() {
     this.showExperiences();
+    console.log(axios.defaults.headers.common["Authorization"]);
   },
 };
 
