@@ -3,11 +3,11 @@
 </template>
 
 <script>
-// @ is an alias to /src
 import Experiences from "@/components/experiences.vue";
 
 export default {
   name: "HomeView",
+  title: "Experiences",
   components: {
     Experiences,
   },

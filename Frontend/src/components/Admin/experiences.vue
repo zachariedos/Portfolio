@@ -71,6 +71,7 @@
 import axios from "axios";
 import { format } from "date-fns";
 import { fr } from "date-fns/esm/locale";
+import serverAdresse from "@/privacy/servAdresse";
 
 export default {
   name: "Experiences",
@@ -91,7 +92,7 @@ export default {
   methods: {
     async showExperiences() {
       axios
-        .get("http://localhost:3000/")
+        .get(`${serverAdresse}/`)
         .then((resp) => {
           if (resp.data) {
             this.experiences = resp.data;
@@ -110,8 +111,6 @@ export default {
                     )
                   : "Jusqu'à aujourd'hui";
               experience.fromto = `{"start": "${newstart}", "end": "${newend}"}`;
-
-              console.log(JSON.parse(experience.fromto).end);
             });
           }
         })
@@ -125,12 +124,8 @@ export default {
           .querySelector(`[companyname="${experience.companyName}"]`)
           .id.replace("experience", "");
         axios
-          .put("http://localhost:3000/modifyExperienceIndex", experience, {
-            // Config
-          })
-          .then((resp) => {
-            console.log(resp);
-          });
+          .put(`${serverAdresse}/modifyExperienceIndex`, experience, {})
+          .then((resp) => {});
       });
     },
     async deleteExperiences() {
@@ -140,7 +135,7 @@ export default {
           event.target.parentNode.getAttribute("companyname")
         ) {
           axios
-            .post("http://localhost:3000/deleteExperience", experience, {})
+            .post(`${serverAdresse}/deleteExperience`, experience, {})
             .then((resp) => {
               this.showExperiences();
             })
@@ -149,10 +144,6 @@ export default {
             });
         }
       });
-      // function test() {
-      //   console.log(event.target.parentNode);
-      //   document.getElementById().remove();
-      // }
     },
     goUp(event) {
       this.clickedExperience = event.target.parentNode.parentNode.id.replace(
@@ -206,7 +197,7 @@ export default {
       });
 
       axios
-        .post("http://localhost:3000/addExperience", JSON.parse(experience), {})
+        .post(`${serverAdresse}/addExperience`, JSON.parse(experience), {})
         .then((resp) => {
           this.showExperiences();
         });

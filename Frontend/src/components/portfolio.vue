@@ -49,8 +49,6 @@ export default {
         .then((resp) => {
           if (resp.data) {
             this.sites = resp.data;
-            console.log(this.sites);
-
             this.sitesnb = Object.keys(this.sites).length;
             var style = document.createElement("style");
             style.type = "text/css";
@@ -80,7 +78,6 @@ export default {
     },
     showmustGoOn() {
       const content = document.querySelector("#content");
-      console.log(this.sitesnb);
       const nbsites = this.sitesnb;
       const espacement = this.espacement;
 

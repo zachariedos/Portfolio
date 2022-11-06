@@ -32,7 +32,7 @@ import { gsap } from "gsap";
 import { format } from "date-fns";
 import { fr } from "date-fns/esm/locale";
 import { ScrollTrigger } from "gsap/ScrollTrigger.js";
-
+import serverAdresse from "@/privacy/servAdresse";
 export default {
   name: "Expériences",
   props: {
@@ -53,11 +53,10 @@ export default {
   methods: {
     async showExperiences() {
       axios
-        .get("http://localhost:3000/")
+        .get(`${serverAdresse}/`)
         .then((resp) => {
           if (resp.data) {
             this.experiences = resp.data;
-            console.log(this.experiences);
             this.experiences.forEach((experience) => {
               let newstart = format(
                 new Date(JSON.parse(experience.fromto).start),
@@ -73,8 +72,6 @@ export default {
                     )
                   : "Jusqu'à aujourd'hui";
               experience.fromto = `{"start": "${newstart}", "end": "${newend}"}`;
-
-              console.log(JSON.parse(experience.fromto).end);
             });
 
             this.experiencesnb = Object.keys(this.experiences).length;
@@ -106,7 +103,6 @@ export default {
     },
     showmustGoOn() {
       const content = document.querySelector("#content");
-      console.log(this.experiencesnb);
       const nbexperiences = this.experiencesnb;
       const espacement = this.espacement;
 
@@ -217,7 +213,6 @@ export default {
   },
   mounted() {
     this.showExperiences();
-    console.log(axios.defaults.headers.common["Authorization"]);
   },
 };
 

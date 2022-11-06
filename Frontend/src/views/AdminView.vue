@@ -3,9 +3,9 @@
     <div class="sidebar">
       <div class="sidebarcontent">
         <div>
-          <a @click="currentPage = 'Experiences'" href="#">Experiences</a>
+          <a @click="currentPage = 'Experiences'">Experiences</a>
         </div>
-        <div><a @click="currentPage = 'Portfolio'" href="#">Portfolio</a></div>
+        <div><a @click="currentPage = 'Portfolio'">Portfolio</a></div>
       </div>
     </div>
 
@@ -22,17 +22,18 @@ import axios from "axios";
 
 export default {
   name: "AdminView",
+  title: "Admin",
   components: {
     Experiences,
     Portfolio,
   },
   data: function () {
     return {
-      currentPage: "Experiences",
+      currentPage: "Portfolio",
       check: axios.defaults.headers.common["Authorization"],
     };
   },
-  beforeCreate() {
+  mounted() {
     this.check ? "" : this.$router.push("/connexion");
   },
 };
@@ -72,6 +73,7 @@ export default {
 /* When you mouse over the navigation links, change their color */
 .sidebar a:hover {
   color: #f1f1f1;
+  cursor: pointer;
 }
 
 /* Style page content */

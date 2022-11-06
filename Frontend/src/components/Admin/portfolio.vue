@@ -59,7 +59,7 @@
 <style scooped></style>
 <script>
 import axios from "axios";
-
+import serverAdresse from "@/privacy/servAdresse";
 export default {
   name: "Sites",
   data() {
@@ -78,7 +78,7 @@ export default {
     },
     async showSites() {
       axios
-        .get("http://localhost:3000/portfolio")
+        .get(`${serverAdresse}/portfolio`)
         .then((resp) => {
           if (resp.data) {
             this.sites = resp.data;
@@ -91,10 +91,10 @@ export default {
     async updateSitesIndex() {
       await this.sites.forEach((site) => {
         site.newIndex = document
-          .querySelector(`[companyname="${site.siteName}"]`)
+          .querySelector(`[sitename="${site.siteName}"]`)
           .id.replace("site", "");
         axios
-          .put("http://localhost:3000/portfolio/modifySiteIndex", site, {})
+          .put(`${serverAdresse}/portfolio/modifySiteIndex`, site, {})
           .then((resp) => {});
       });
     },
@@ -102,7 +102,7 @@ export default {
       await this.sites.forEach((site) => {
         if (site.siteName == event.target.parentNode.getAttribute("siteName")) {
           axios
-            .post("http://localhost:3000/portfolio/deleteSite", site, {})
+            .post(`${serverAdresse}/portfolio/deleteSite`, site, {})
             .then((resp) => {
               this.showSites();
             })
@@ -145,18 +145,15 @@ export default {
       this.updateSitesIndex();
     },
     addSite() {
-      console.log(this.selectedFile);
-
       let site = JSON.stringify({
         siteName: this.addStTitleValue,
         description: this.addStDescValue,
         link: this.addStLinkValue,
       });
       axios
-        .post("http://localhost:3000/portfolio/addSite", site, {
-          headers: {
-            "Content-Type": "application/json",
-          },
+        .post(`${serverAdresse}/portfolio/addSite`, JSON.parse(site), {})
+        .then(() => {
+          this.showSites();
         })
         .catch((error) => {
           console.log(error);

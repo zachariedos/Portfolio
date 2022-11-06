@@ -1,25 +1,26 @@
 <template>
-  <nav @eventname="updateparent()">
-    <p>{{ this.navKey }}</p>
-    <router-link to="/">Expérience</router-link> |
-    <router-link to="/portfolio">Portfolio</router-link> |
-    <router-link v-if="this.toCheck" to="/admin">Administration</router-link> |
-    <router-link v-if="!this.toCheck" to="/connexion">Connexion</router-link>
-  </nav>
-  <button @click="console.log(this.$route.params)">dad</button>
-  <router-view />
+  <Navbar :key="componentKey" />
 </template>
 <script>
+import Navbar from "@/components/navbar.vue";
 export default {
   name: "App",
+  components: {
+    Navbar,
+  },
   data() {
     return {
-      navKey: 0,
+      componentKey: 0,
     };
   },
+  watch: {
+    $route() {
+      this.forceRerender();
+    },
+  },
   methods: {
-    updateparent() {
-      console.log("ça marche putain");
+    forceRerender() {
+      this.componentKey += 1;
     },
   },
 };

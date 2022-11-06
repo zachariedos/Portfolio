@@ -54,7 +54,6 @@ exports.deleteExperience = (req, res, next) => {
 };
 
 exports.addExperience = (req, res, next) => {
-  console.log(req.body);
   const newXP = new Experience({
     companyName: req.body.companyName,
     description: req.body.description,
