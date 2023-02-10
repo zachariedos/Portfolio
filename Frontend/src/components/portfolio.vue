@@ -45,7 +45,7 @@ export default {
   methods: {
     async showSites() {
       axios
-        .get("http://localhost:3000/portfolio")
+        .get(`${process.env.VUE_APP_API_URL}/portfolio`)
         .then((resp) => {
           if (resp.data) {
             this.sites = resp.data;

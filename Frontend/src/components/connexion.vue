@@ -27,7 +27,6 @@
 <script>
 import axios from "axios";
 import App from "@/App.vue";
-import serverAdresse from "@/privacy/servAdresse";
 export default {
   name: "Connexion",
   props: {},
@@ -42,8 +41,9 @@ export default {
   },
   methods: {
     async myLoginFunction() {
+      console.log(process.env.VUE_APP_API_URL)
       await axios
-        .post(`${serverAdresse}/auth/login`, {
+        .post(`${process.env.VUE_APP_API_URL}/auth/login`, {
           email: this.email,
           password: this.password,
         })

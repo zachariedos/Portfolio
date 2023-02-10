@@ -71,7 +71,6 @@
 import axios from "axios";
 import { format } from "date-fns";
 import { fr } from "date-fns/esm/locale";
-import serverAdresse from "@/privacy/servAdresse";
 
 export default {
   name: "Experiences",
@@ -92,7 +91,7 @@ export default {
   methods: {
     async showExperiences() {
       axios
-        .get(`${serverAdresse}/`)
+        .get(`${process.env.VUE_APP_API_URL}/`)
         .then((resp) => {
           if (resp.data) {
             this.experiences = resp.data;
@@ -124,7 +123,7 @@ export default {
           .querySelector(`[companyname="${experience.companyName}"]`)
           .id.replace("experience", "");
         axios
-          .put(`${serverAdresse}/modifyExperienceIndex`, experience, {})
+          .put(`${process.env.VUE_APP_API_URL}/modifyExperienceIndex`, experience, {})
           .then((resp) => {});
       });
     },
@@ -135,7 +134,7 @@ export default {
           event.target.parentNode.getAttribute("companyname")
         ) {
           axios
-            .post(`${serverAdresse}/deleteExperience`, experience, {})
+            .post(`${process.env.VUE_APP_API_URL}/deleteExperience`, experience, {})
             .then((resp) => {
               this.showExperiences();
             })
@@ -197,7 +196,7 @@ export default {
       });
 
       axios
-        .post(`${serverAdresse}/addExperience`, JSON.parse(experience), {})
+        .post(`${process.env.VUE_APP_API_URL}/addExperience`, JSON.parse(experience), {})
         .then((resp) => {
           this.showExperiences();
         });

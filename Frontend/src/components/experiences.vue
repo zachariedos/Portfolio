@@ -32,7 +32,6 @@ import { gsap } from "gsap";
 import { format } from "date-fns";
 import { fr } from "date-fns/esm/locale";
 import { ScrollTrigger } from "gsap/ScrollTrigger.js";
-import serverAdresse from "@/privacy/servAdresse";
 export default {
   name: "Expériences",
   props: {
@@ -53,7 +52,7 @@ export default {
   methods: {
     async showExperiences() {
       axios
-        .get(`${serverAdresse}/`)
+        .get(`${process.env.VUE_APP_API_URL}/`)
         .then((resp) => {
           if (resp.data) {
             this.experiences = resp.data;

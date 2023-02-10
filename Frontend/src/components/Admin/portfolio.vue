@@ -59,7 +59,6 @@
 <style scooped></style>
 <script>
 import axios from "axios";
-import serverAdresse from "@/privacy/servAdresse";
 export default {
   name: "Sites",
   data() {
@@ -78,7 +77,7 @@ export default {
     },
     async showSites() {
       axios
-        .get(`${serverAdresse}/portfolio`)
+        .get(`${process.env.VUE_APP_API_URL}/portfolio`)
         .then((resp) => {
           if (resp.data) {
             this.sites = resp.data;
@@ -94,7 +93,7 @@ export default {
           .querySelector(`[sitename="${site.siteName}"]`)
           .id.replace("site", "");
         axios
-          .put(`${serverAdresse}/portfolio/modifySiteIndex`, site, {})
+          .put(`${process.env.VUE_APP_API_URL}/portfolio/modifySiteIndex`, site, {})
           .then((resp) => {});
       });
     },
@@ -102,7 +101,7 @@ export default {
       await this.sites.forEach((site) => {
         if (site.siteName == event.target.parentNode.getAttribute("siteName")) {
           axios
-            .post(`${serverAdresse}/portfolio/deleteSite`, site, {})
+            .post(`${process.env.VUE_APP_API_URL}/portfolio/deleteSite`, site, {})
             .then((resp) => {
               this.showSites();
             })
@@ -151,7 +150,7 @@ export default {
         link: this.addStLinkValue,
       });
       axios
-        .post(`${serverAdresse}/portfolio/addSite`, JSON.parse(site), {})
+        .post(`${process.env.VUE_APP_API_URL}/portfolio/addSite`, JSON.parse(site), {})
         .then(() => {
           this.showSites();
         })
